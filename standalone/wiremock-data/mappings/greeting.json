@@ -1,0 +1,12 @@
+{
+    "request": {
+        "method": "POST",
+        "urlPath": "/com.example.grpc.GreetingService/greeting"
+    },
+
+    "response": {
+        "status": 200,
+        "body": "{\"greeting\": \"Hello {{jsonPath request.body '$.name'}}\"}",
+        "transformers": ["response-template"]
+    }
+}
