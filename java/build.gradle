@@ -79,6 +79,15 @@ protobuf {
 processTestResources.dependsOn generateProto
 processTestResources.dependsOn generateTestProto
 
+test {
+  testLogging {
+    events "PASSED", "FAILED", "SKIPPED"
+    exceptionFormat "full"
+  }
+
+  useJUnitPlatform()
+}
+
 wrapper {
   gradleVersion = '8.0.1'
   distributionType = Wrapper.DistributionType.BIN
