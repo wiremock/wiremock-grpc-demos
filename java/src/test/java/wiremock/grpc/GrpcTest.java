@@ -29,6 +29,7 @@ import com.example.grpc.HelloRequest;
 import com.example.grpc.HelloResponse;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import com.google.protobuf.StringValue;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
@@ -113,7 +114,7 @@ public class GrpcTest {
   void request_matching_with_message() {
     mockGreetingService.stubFor(
         method("greeting")
-            .withRequestMessage(equalToMessage(HelloRequest.newBuilder().setName("Tom")))
+            .withRequestMessage(equalToMessage(HelloRequest.newBuilder().setName(StringValue.of("Tom"))))
             .willReturn(message(HelloResponse.newBuilder().setGreeting("OK"))));
 
     assertThat(greetingsClient.greet("Tom"), is("OK"));
@@ -138,7 +139,7 @@ public class GrpcTest {
   void streaming_request_unary_response() {
     mockGreetingService.stubFor(
         method("manyGreetingsOneReply")
-            .withRequestMessage(equalToMessage(HelloRequest.newBuilder().setName("Rob").build()))
+            .withRequestMessage(equalToMessage(HelloRequest.newBuilder().setName(StringValue.of("Rob")).build()))
             .willReturn(message(HelloResponse.newBuilder().setGreeting("Hi Rob"))));
 
     assertThat(greetingsClient.manyGreetingsOneReply("Tom", "Uri", "Rob", "Mark"), is("Hi Rob"));

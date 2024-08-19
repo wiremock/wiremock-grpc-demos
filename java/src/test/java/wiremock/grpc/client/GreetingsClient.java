@@ -19,6 +19,7 @@ import com.example.grpc.GreetingServiceGrpc;
 import com.example.grpc.HelloRequest;
 import com.example.grpc.HelloResponse;
 import com.github.tomakehurst.wiremock.common.Exceptions;
+import com.google.protobuf.StringValue;
 import io.grpc.Channel;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class GreetingsClient {
   }
 
   public String greet(String name) {
-    return stub.greeting(HelloRequest.newBuilder().setName(name).build())
+    return stub.greeting(HelloRequest.newBuilder().setName(StringValue.of(name)).build())
         .getGreeting();
   }
 
@@ -50,7 +51,7 @@ public class GreetingsClient {
     final List<HelloResponse> responses = new ArrayList<>();
 
     asyncStub.oneGreetingManyReplies(
-        HelloRequest.newBuilder().setName(name).build(),
+        HelloRequest.newBuilder().setName(StringValue.of(name)).build(),
         new StreamObserver<>() {
           @Override
           public void onNext(HelloResponse value) {
@@ -98,7 +99,7 @@ public class GreetingsClient {
             });
 
     for (String name : names) {
-      requestObserver.onNext(HelloRequest.newBuilder().setName(name).build());
+      requestObserver.onNext(HelloRequest.newBuilder().setName(StringValue.of(name)).build());
     }
     requestObserver.onCompleted();
 
