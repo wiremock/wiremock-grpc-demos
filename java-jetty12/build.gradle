@@ -1,0 +1,95 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://oss.sonatype.org"
+    }
+    mavenCentral()
+  }
+}
+
+plugins {
+  id 'java'
+  id 'idea'
+  id 'eclipse'
+  id "com.google.protobuf" version "0.9.4"
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+group 'org.wiremock.demo'
+version = "1.0.0"
+
+java {
+  sourceCompatibility = 17
+  targetCompatibility = 17
+}
+
+ext {
+  versions = [
+      wiremock: "3.10.0",
+      wiremockGrpc: "0.8.1",
+      grpc    : "1.59.0"
+  ]
+}
+
+dependencies {
+  implementation "io.grpc:grpc-bom:$versions.grpc"
+  implementation "io.grpc:grpc-protobuf:$versions.grpc"
+  implementation "io.grpc:grpc-stub:$versions.grpc"
+
+  implementation 'javax.annotation:javax.annotation-api:1.3.2'
+
+  testImplementation "org.wiremock:wiremock-jetty12:$versions.wiremock"
+  testImplementation "org.wiremock:wiremock-grpc-extension-jetty12:$versions.wiremockGrpc"
+  testImplementation(platform('org.junit:junit-bom:5.10.0'))
+  testImplementation "org.junit.jupiter:junit-jupiter"
+  testImplementation "org.hamcrest:hamcrest-core:2.2"
+  testImplementation "org.hamcrest:hamcrest-library:2.2"
+  testImplementation 'org.awaitility:awaitility:4.2.0'
+  testImplementation "io.grpc:grpc-okhttp:$versions.grpc"
+}
+
+protobuf {
+  protoc {
+    artifact = "com.google.protobuf:protoc:3.24.3"
+  }
+
+  plugins {
+    grpc {
+      artifact = "io.grpc:protoc-gen-grpc-java:$versions.grpc"
+    }
+  }
+  generateProtoTasks {
+    all()*.plugins {
+      grpc {
+        outputSubDir = 'java'
+      }
+    }
+
+    all().each { task ->
+      task.generateDescriptorSet = true
+      task.descriptorSetOptions.includeImports = true
+      task.descriptorSetOptions.path = "$projectDir/src/test/resources/wiremock/grpc/services.dsc"
+    }
+  }
+}
+
+processTestResources.dependsOn generateProto
+processTestResources.dependsOn generateTestProto
+
+test {
+  testLogging {
+    events "PASSED", "FAILED", "SKIPPED"
+    exceptionFormat "full"
+  }
+
+  useJUnitPlatform()
+}
+
+wrapper {
+  gradleVersion = '8.0.1'
+  distributionType = Wrapper.DistributionType.BIN
+}
