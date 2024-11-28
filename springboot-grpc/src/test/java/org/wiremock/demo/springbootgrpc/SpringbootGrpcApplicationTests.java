@@ -1,6 +1,5 @@
 package org.wiremock.demo.springbootgrpc;
 
-import com.example.grpc.GreetingServiceGrpc;
 import com.example.grpc.HelloResponse;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.web.client.RestClient;
+import org.wiremock.grpc.Jetty12GrpcExtensionFactory;
 import org.wiremock.grpc.dsl.WireMockGrpcService;
 import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
@@ -27,7 +27,7 @@ import static org.wiremock.grpc.dsl.WireMockGrpc.method;
         @ConfigureWireMock(
                 name = "greeting-service",
                 baseUrlProperties = "greeting-service.url",
-                configurationCustomizers = GrpcConfigurationCustomizer.class
+                extensionFactories = {Jetty12GrpcExtensionFactory.class}
         )
 })
 class SpringbootGrpcApplicationTests {
