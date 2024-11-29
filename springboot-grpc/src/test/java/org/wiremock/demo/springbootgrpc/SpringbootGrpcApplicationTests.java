@@ -1,6 +1,5 @@
 package org.wiremock.demo.springbootgrpc;
 
-import com.example.grpc.GreetingServiceGrpc;
 import com.example.grpc.HelloResponse;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;

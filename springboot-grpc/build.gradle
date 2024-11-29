@@ -38,7 +38,10 @@ ext {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-web', {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+	}
+	implementation 'org.springframework.boot:spring-boot-starter-jetty'
 
 	implementation platform("com.fasterxml.jackson:jackson-bom:$versions.jackson")
 
