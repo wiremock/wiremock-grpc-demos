@@ -57,7 +57,8 @@ class SpringbootGrpcApplicationTests {
 
         String result = client.get()
                 .uri("http://localhost:" + serverPort + "/greeting?name=whatever")
-                .exchange((clientRequest, clientResponse) -> clientResponse.bodyTo(String.class));
+                .retrieve()
+                .body(String.class);
 
         assertThat(result, is("Hi Tom"));
     }
