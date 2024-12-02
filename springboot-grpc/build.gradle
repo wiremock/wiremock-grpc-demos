@@ -31,7 +31,7 @@ repositories {
 ext {
 	versions = [
 		wiremock    : "3.10.0",
-		wiremockGrpc: "0.8.1",
+		wiremockGrpc: "0.9.0",
 		grpc        : "1.68.0",
 		jackson     : '2.17.2',
 	]
