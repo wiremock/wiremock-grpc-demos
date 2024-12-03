@@ -1,17 +1,17 @@
 package org.wiremock.demo.springbootgrpc;
 
-import com.example.grpc.GreetingServiceGrpc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.grpc.client.GrpcChannelFactory;
+import org.wiremock.grpc.EchoServiceGrpc;
 
 @SpringBootApplication
 public class SpringbootGrpcApplication {
 
 	@Bean
-	GreetingServiceGrpc.GreetingServiceBlockingStub greetings(GrpcChannelFactory channels) {
-		return GreetingServiceGrpc.newBlockingStub(channels.createChannel("local").build());
+	EchoServiceGrpc.EchoServiceBlockingStub echo(GrpcChannelFactory channels) {
+		return EchoServiceGrpc.newBlockingStub(channels.createChannel("local").build());
 	}
 
 	public static void main(String[] args) {

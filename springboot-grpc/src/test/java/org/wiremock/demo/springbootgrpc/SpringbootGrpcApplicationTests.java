@@ -1,6 +1,5 @@
 package org.wiremock.demo.springbootgrpc;
 
-import com.example.grpc.HelloResponse;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.web.client.RestClient;
+import org.wiremock.grpc.EchoServiceOuterClass.EchoResponse;
 import org.wiremock.grpc.Jetty12GrpcExtensionFactory;
 import org.wiremock.grpc.dsl.WireMockGrpcService;
 import org.wiremock.spring.ConfigureWireMock;
@@ -34,8 +34,8 @@ import static org.wiremock.grpc.dsl.WireMockGrpc.method;
 class SpringbootGrpcApplicationTests {
 
     @InjectWireMock("greeting-service")
-    WireMockServer greetingWireMockInstance;
-    WireMockGrpcService mockGreetingService;
+    WireMockServer echoWireMockInstance;
+    WireMockGrpcService mockEchoService;
 
     @LocalServerPort
     int serverPort;
@@ -43,21 +43,21 @@ class SpringbootGrpcApplicationTests {
 
     @BeforeEach
     void init() {
-        mockGreetingService = new WireMockGrpcService(
-                new WireMock(greetingWireMockInstance),
-                "com.example.grpc.GreetingService"
+        mockEchoService = new WireMockGrpcService(
+                new WireMock(echoWireMockInstance),
+                "org.wiremock.grpc.EchoService"
         );
         client = RestClient.create();
     }
 
     @Test
     void returns_greeting_from_grpc_service() {
-        mockGreetingService.stubFor(
-                method("greeting")
-                        .willReturn(message(HelloResponse.newBuilder().setGreeting("Hi Tom"))));
+        mockEchoService.stubFor(
+                method("echo")
+                        .willReturn(message(EchoResponse.newBuilder().setMessage("Hi Tom"))));
 
         String result = client.get()
-                .uri("http://localhost:" + serverPort + "/greeting?name=whatever")
+                .uri("http://localhost:" + serverPort + "/test-echo?message=whatever")
                 .retrieve()
                 .body(String.class);
 

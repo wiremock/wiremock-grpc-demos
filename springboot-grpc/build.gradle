@@ -40,7 +40,6 @@ ext {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-//	implementation platform('org.springframework.grpc:spring-grpc-dependencies:0.2.0')
 	implementation 'org.springframework.grpc:spring-grpc-spring-boot-starter:0.2.0'
 
 	implementation platform("com.fasterxml.jackson:jackson-bom:$versions.jackson")
