@@ -27,14 +27,15 @@ import static org.wiremock.grpc.dsl.WireMockGrpc.method;
         @ConfigureWireMock(
                 name = "greeting-service",
                 baseUrlProperties = "greeting-service.url",
+                portProperties = "greeting-service.port",
                 extensionFactories = {Jetty12GrpcExtensionFactory.class}
         )
 })
 class SpringbootGrpcApplicationTests {
 
     @InjectWireMock("greeting-service")
-    WireMockServer mockGrpcGreetingService;
-    WireMockGrpcService greetingService;
+    WireMockServer greetingWireMockInstance;
+    WireMockGrpcService mockGreetingService;
 
     @LocalServerPort
     int serverPort;
@@ -42,8 +43,8 @@ class SpringbootGrpcApplicationTests {
 
     @BeforeEach
     void init() {
-        greetingService = new WireMockGrpcService(
-                new WireMock(mockGrpcGreetingService),
+        mockGreetingService = new WireMockGrpcService(
+                new WireMock(greetingWireMockInstance),
                 "com.example.grpc.GreetingService"
         );
         client = RestClient.create();
@@ -51,7 +52,7 @@ class SpringbootGrpcApplicationTests {
 
     @Test
     void returns_greeting_from_grpc_service() {
-        greetingService.stubFor(
+        mockGreetingService.stubFor(
                 method("greeting")
                         .willReturn(message(HelloResponse.newBuilder().setGreeting("Hi Tom"))));
 
