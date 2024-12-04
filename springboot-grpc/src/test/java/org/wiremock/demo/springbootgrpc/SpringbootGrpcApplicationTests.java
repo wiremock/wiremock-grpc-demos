@@ -20,16 +20,15 @@ import static org.wiremock.grpc.dsl.WireMockGrpc.message;
 import static org.wiremock.grpc.dsl.WireMockGrpc.method;
 
 @SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        classes = SpringbootGrpcApplication.class
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    classes = SpringbootGrpcApplication.class
 )
 @EnableWireMock({
-        @ConfigureWireMock(
-                name = "greeting-service",
-                baseUrlProperties = "greeting-service.url",
-                portProperties = "greeting-service.port",
-                extensionFactories = {Jetty12GrpcExtensionFactory.class}
-        )
+    @ConfigureWireMock(
+        name = "greeting-service",
+        portProperties = "greeting-service.port",
+        extensionFactories = { Jetty12GrpcExtensionFactory.class }
+    )
 })
 class SpringbootGrpcApplicationTests {
 
@@ -51,13 +50,17 @@ class SpringbootGrpcApplicationTests {
     }
 
     @Test
-    void returns_greeting_from_grpc_service() {
+    void returns_message_from_grpc_service() {
         mockEchoService.stubFor(
                 method("echo")
-                        .willReturn(message(EchoResponse.newBuilder().setMessage("Hi Tom"))));
+                        .willReturn(message(
+                                EchoResponse.newBuilder()
+                                .setMessage("Hi Tom")
+                        )));
 
+        String url = "http://localhost:" + serverPort + "/test-echo?message=blah";
         String result = client.get()
-                .uri("http://localhost:" + serverPort + "/test-echo?message=whatever")
+                .uri(url)
                 .retrieve()
                 .body(String.class);
 
