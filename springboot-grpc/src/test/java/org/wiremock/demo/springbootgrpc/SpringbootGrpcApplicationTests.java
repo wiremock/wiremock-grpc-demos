@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.web.client.RestClient;
+import org.wiremock.grpc.EchoServiceGrpc;
 import org.wiremock.grpc.EchoServiceOuterClass.EchoResponse;
 import org.wiremock.grpc.Jetty12GrpcExtensionFactory;
 import org.wiremock.grpc.dsl.WireMockGrpcService;
@@ -43,7 +44,7 @@ class SpringbootGrpcApplicationTests {
     void init() {
         mockEchoService = new WireMockGrpcService(
                 new WireMock(echoWireMockInstance),
-                "org.wiremock.grpc.EchoService"
+                EchoServiceGrpc.SERVICE_NAME
         );
         client = RestClient.create();
     }
