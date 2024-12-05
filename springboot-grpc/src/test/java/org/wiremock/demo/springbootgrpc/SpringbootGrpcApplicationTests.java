@@ -16,8 +16,7 @@ import org.wiremock.spring.InjectWireMock;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.wiremock.grpc.dsl.WireMockGrpc.message;
-import static org.wiremock.grpc.dsl.WireMockGrpc.method;
+import static org.wiremock.grpc.dsl.WireMockGrpc.*;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -50,7 +49,7 @@ class SpringbootGrpcApplicationTests {
     }
 
     @Test
-    void returns_message_from_grpc_service() {
+    void returns_canned_message_from_grpc_service() {
         mockEchoService.stubFor(
                 method("echo")
                         .willReturn(message(
@@ -65,6 +64,25 @@ class SpringbootGrpcApplicationTests {
                 .body(String.class);
 
         assertThat(result, is("Hi Tom"));
+    }
+
+    @Test
+    void returns_dynamic_message_from_grpc_service() {
+        mockEchoService.stubFor(
+            method("echo").willReturn(
+                jsonTemplate(
+                    "{\"message\":\"{{jsonPath request.body '$.message'}}\"}"
+                )));
+
+        String url = "http://localhost:" + serverPort + "/test-echo?" +
+                     "message=my-messsage";
+
+        String result = client.get()
+                .uri(url)
+                .retrieve()
+                .body(String.class);
+
+        assertThat(result, is("my-messsage"));
     }
 
 }
