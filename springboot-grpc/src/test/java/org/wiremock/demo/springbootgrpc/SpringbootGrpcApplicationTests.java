@@ -25,14 +25,14 @@ import static org.wiremock.grpc.dsl.WireMockGrpc.*;
 )
 @EnableWireMock({
     @ConfigureWireMock(
-        name = "greeting-service",
-        portProperties = "greeting-service.port",
+        name = "echo-service",
+        portProperties = "echo-service.port",
         extensionFactories = { Jetty12GrpcExtensionFactory.class }
     )
 })
 class SpringbootGrpcApplicationTests {
 
-    @InjectWireMock("greeting-service")
+    @InjectWireMock("echo-service")
     WireMockServer echoWireMockInstance;
     WireMockGrpcService mockEchoService;
 
