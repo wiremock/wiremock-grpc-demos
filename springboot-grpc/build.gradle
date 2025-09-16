@@ -60,7 +60,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	testImplementation "org.wiremock:wiremock-grpc-extension-jetty12:$versions.wiremockGrpc"
-	testImplementation "org.wiremock.integrations:wiremock-spring-boot:3.0.0"
+	testImplementation "org.wiremock.integrations:wiremock-spring-boot:3.5.0"
 
 }
 
@@ -92,6 +92,7 @@ protobuf {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
 
 processTestResources.dependsOn generateProto
 processTestResources.dependsOn generateTestProto
